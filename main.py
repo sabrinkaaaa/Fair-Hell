@@ -2,6 +2,8 @@ import pygame
 
 def main():
     pygame.init()
+    size = width, height = 1100, 700
+    screen = pygame.display.set_mode(size)
     running = True
     while running:
         for event in pygame.event.get():
