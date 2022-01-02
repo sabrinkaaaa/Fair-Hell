@@ -1,6 +1,20 @@
 import pygame
 
 
+class Player:
+    def init(self, pers):
+        self.pers = pers
+        self.coords = self.x, self.y = 110, 175
+        # скорость передвижения 10 px
+        self.hp = 300
+        if self.pers == 'priz':
+            self.viz = False
+        self.spos = 20
+
+    def cords(self, x,y):
+        self.x += x
+        self.y += y
+
 def main():
     pygame.init()
     size = width, height = 1100, 700
@@ -26,7 +40,7 @@ def main():
                     # Супер атака(способности)
                     pass
                 if event.key == pygame.K_c:
-                    # блок
+                    # блок(90% урона будет блокировано)
                     pass
     pygame.quit()
 
