@@ -1,5 +1,5 @@
 import pygame
-
+from load_images import load_image
 
 class Jump:
     def __init__(self):
@@ -44,7 +44,8 @@ class Player:
 
     def jump1(self):
         self.jump.jump_act()
-
+    def attack(self):
+        pass
 
 
 
