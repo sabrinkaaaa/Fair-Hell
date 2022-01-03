@@ -34,8 +34,18 @@ class Player:
         self.spos = 20
         self.jump = Jump
 
-    def cords(self, x, y):
+    def cords(self, x, jump):
         self.x += x
+        if jump[0]:
+            if jump[1]:
+                self.y += 5
+            else:
+                self.y -=5
+
+    def jump1(self):
+        self.jump.jump_act()
+
+
 
 
 def main():
