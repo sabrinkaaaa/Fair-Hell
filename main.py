@@ -1,19 +1,42 @@
 import pygame
 
 
+class Jump:
+    def __init__(self):
+        self.jump = False
+
+    def jump_act(self):
+        self.jump = -50
+
+    def jump1(self):
+        a = 0
+        b = 0
+        if self.jump < 50:
+            self.jump += 5
+            a = True
+        else:
+            a = False
+        if self.jump < 0:
+            b = True
+        else:
+            b = False
+        return a, b
+
+
 class Player:
-    def init(self, pers):
-        self.pers = pers
+    def __init__(self, pers):
+        self.pers = pers  # 'argo''peop''priz''diav'
         self.coords = self.x, self.y = 110, 175
         # скорость передвижения 10 px
         self.hp = 300
         if self.pers == 'priz':
             self.viz = False
         self.spos = 20
+        self.jump = Jump
 
-    def cords(self, x,y):
+    def cords(self, x, y):
         self.x += x
-        self.y += y
+
 
 def main():
     pygame.init()
