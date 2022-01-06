@@ -4,28 +4,6 @@ pygame.init()
 abc = pygame.sprite.Group()
 
 
-class Jump:
-    def __init__(self):
-        self.jump = False
-
-    def jump_act(self):
-        self.jump = -50
-
-    def jump1(self):
-        a = 0
-        b = 0
-        if self.jump < 50:
-            self.jump += 5
-            a = True
-        else:
-            a = False
-        if self.jump < 0:
-            b = True
-        else:
-            b = False
-        return a, b
-
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, pers, *group):
         super().__init__(group)
@@ -40,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         if self.pers == 'priz':
             self.viz = False
         self.spos = 20
+        self.update_jump = 1
         self.jump1 = False
         self.jump = False
 
@@ -53,18 +32,20 @@ class Player(pygame.sprite.Sprite):
     def jump_act(self):
         print('activate jump')
         if not self.jump1:
-            self.jump = -150
+            self.update_jump = 1
+            self.jump = -1 * (self.update_jump) - 130
             self.jump1 = True
 
     def update(self, *args):
         if self.jump1:
-            if self.jump < 150:
-                self.jump += 1
+            if self.jump < 130 - 1:
+                self.jump += self.update_jump
                 if self.jump < 0:
-                    self.cords(0, -1)
+                    self.cords(0, -1 * (self.update_jump))
                 else:
-                    self.cords(0, 1)
+                    self.cords(0, self.update_jump)
             else:
+                print(self.rect.y)
                 self.jump = False
                 self.jump1 = False
 
