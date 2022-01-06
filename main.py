@@ -21,6 +21,14 @@ class Player(pygame.sprite.Sprite):
         self.update_jump = 1
         self.jump1 = False
         self.jump = False
+        self.left = False
+        self.right = False
+        self.update1 = 0
+    def left_act(self):
+        self.left = not self.left
+
+    def right_act(self):
+        self.right = not self.right
 
     def cords(self, x, y):
         self.rect.x += x
@@ -37,17 +45,24 @@ class Player(pygame.sprite.Sprite):
             self.jump1 = True
 
     def update(self, *args):
-        if self.jump1:
-            if self.jump < 130 - 1:
-                self.jump += self.update_jump
-                if self.jump < 0:
-                    self.cords(0, -1 * (self.update_jump))
+        self.update1 +=1
+        if self.update1 == 4:
+            self.update1 = 0
+            if self.jump1:
+                if self.jump < 130 - 1:
+                    self.jump += self.update_jump
+                    if self.jump < 0:
+                        self.cords(0, -1 * (self.update_jump))
+                    else:
+                        self.cords(0, self.update_jump)
                 else:
-                    self.cords(0, self.update_jump)
-            else:
-                print(self.rect.y)
-                self.jump = False
-                self.jump1 = False
+                    print(self.rect.y)
+                    self.jump = False
+                    self.jump1 = False
+            if self.left:
+                self.cords(-1, 0)
+            if self.right:
+                self.cords(1, 0)
 
 
 a = Player('priz', abc)
@@ -67,9 +82,9 @@ def main():
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     pass
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    pass
+                    a.left_act()
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    pass
+                    a.right_act()
                 if event.key == pygame.K_z:
                     # атака
                     pass
@@ -79,6 +94,12 @@ def main():
                 if event.key == pygame.K_c:
                     # блок(90% урона будет блокировано)
                     pass
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    a.left_act()
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    a.right_act()
+
         screen.fill(pygame.Color("BLACK"))
         abc.draw(screen)
         abc.update(screen)
