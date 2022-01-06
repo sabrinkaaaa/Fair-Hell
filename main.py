@@ -40,35 +40,33 @@ class Player(pygame.sprite.Sprite):
         if self.pers == 'priz':
             self.viz = False
         self.spos = 20
+        self.jump1 = False
         self.jump = False
 
-    def cords(self, x, jump):
+    def cords(self, x, y):
         self.rect.x += x
-        if jump[0]:
-            if jump[1]:
-                self.rect.y += 5
-            else:
-                self.rect.y -= 5
+        self.rect.y += y
 
     def attack(self):
         pass
 
     def jump_act(self):
-        self.jump = -50
+        print('activate jump')
+        if not self.jump1:
+            self.jump = -150
+            self.jump1 = True
 
-    def jump1(self):
-        a = 0
-        b = 0
-        if self.jump < 50:
-            self.jump += 5
-            a = True
-        else:
-            a = False
-        if self.jump < 0:
-            b = True
-        else:
-            b = False
-        return a, b
+    def update(self, *args):
+        if self.jump1:
+            if self.jump < 150:
+                self.jump += 1
+                if self.jump < 0:
+                    self.cords(0, -1)
+                else:
+                    self.cords(0, 1)
+            else:
+                self.jump = False
+                self.jump1 = False
 
 
 a = Player('priz', abc)
@@ -102,6 +100,7 @@ def main():
                     pass
         screen.fill(pygame.Color("BLACK"))
         abc.draw(screen)
+        abc.update(screen)
         pygame.display.flip()
     pygame.quit()
 
