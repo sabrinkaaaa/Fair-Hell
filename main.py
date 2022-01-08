@@ -15,13 +15,16 @@ class Hotbar_hp:
         self.flag = flag
 
     def draw(self, screen):
-        print(1)
+        hp = self.hp / self.max_hp
+        hp = round(hp, 2)
+        draw = 500 * hp
         if self.flag:
-            pygame.draw.line(screen, (255, 0, 0), *[(10, 30), (510, 30)], 15)
-            print(2)
+            pygame.draw.line(screen, (255, 0, 0), *[(10, 30), (draw +10, 30)], 15)
         else:
-            pygame.draw.line(screen, (255, 0, 0), *[(590, 30), (1090, 30)], 15)
+            pygame.draw.line(screen, (255, 0, 0), *[((1090 - draw), 30), (1090, 30)], 15)
 
+    def hp_red(self, hp):
+        self.hp -= hp
 
 
 b = Hotbar_hp(300, True)
@@ -110,6 +113,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     a.jump_act()
+                    c.hp_red(10)
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     pass
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -130,8 +134,10 @@ def main():
                     a.left_act()
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     a.right_act()
+        screen.fill((0, 0, 0))
+        b.draw(screen)
+        c.draw(screen)
 
-        pygame.draw.rect(screen, (0, 0, 0), (0, 50, width, height))
         abc.draw(screen)
         abc.update(screen)
         pygame.display.flip()
