@@ -1,7 +1,31 @@
 import pygame
 
+FPS = 150
+size = width, height = 1100, 700
 pygame.init()
 abc = pygame.sprite.Group()
+clock = pygame.time.Clock()
+hps = pygame.sprite.Group()
+
+
+class Hotbar_hp:
+    def __init__(self, max_hp, flag):
+        self.max_hp = max_hp
+        self.hp = max_hp + 1 - 1
+        self.flag = flag
+
+    def draw(self, screen):
+        print(1)
+        if self.flag:
+            pygame.draw.line(screen, (255, 0, 0), *[(10, 30), (510, 30)], 15)
+            print(2)
+        else:
+            pygame.draw.line(screen, (255, 0, 0), *[(590, 30), (1090, 30)], 15)
+
+
+
+b = Hotbar_hp(300, True)
+c = Hotbar_hp(300, False)
 
 
 class Player(pygame.sprite.Sprite):
@@ -15,6 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = 110, 525
         # скорость передвижения 10 px
         self.hp = 300
+        self.max_hp = 300
         if self.pers == 'priz':
             self.viz = False
         self.spos = 20
@@ -23,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.left = False
         self.right = False
-        self.update1 = 0
+
     def left_act(self):
         self.left = not self.left
 
@@ -33,6 +58,12 @@ class Player(pygame.sprite.Sprite):
     def cords(self, x, y):
         self.rect.x += x
         self.rect.y += y
+
+    def hp_return(self):
+        return self.hp
+
+    def hp_red(self, hp):
+        self.hp -= hp
 
     def attack(self):
         pass
@@ -45,24 +76,21 @@ class Player(pygame.sprite.Sprite):
             self.jump1 = True
 
     def update(self, *args):
-        self.update1 +=1
-        if self.update1 == 4:
-            self.update1 = 0
-            if self.jump1:
-                if self.jump < 130 - 1:
-                    self.jump += self.update_jump
-                    if self.jump < 0:
-                        self.cords(0, -1 * (self.update_jump))
-                    else:
-                        self.cords(0, self.update_jump)
+        if self.jump1:
+            if self.jump < 130 - 1:
+                self.jump += self.update_jump
+                if self.jump < 0:
+                    self.cords(0, -1 * (self.update_jump))
                 else:
-                    print(self.rect.y)
-                    self.jump = False
-                    self.jump1 = False
-            if self.left:
-                self.cords(-1, 0)
-            if self.right:
-                self.cords(1, 0)
+                    self.cords(0, self.update_jump)
+            else:
+                print(self.rect.y)
+                self.jump = False
+                self.jump1 = False
+        if self.left and self.rect.x > 0:
+            self.cords(-1, 0)
+        if self.right and self.rect.x < width - 100:
+            self.cords(1, 0)
 
 
 a = Player('priz', abc)
@@ -72,6 +100,9 @@ def main():
     size = width, height = 1100, 700
     screen = pygame.display.set_mode(size)
     running = True
+    b.draw(screen)
+    c.draw(screen)
+    pygame.display.update()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -100,10 +131,11 @@ def main():
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     a.right_act()
 
-        screen.fill(pygame.Color("BLACK"))
+        pygame.draw.rect(screen, (0, 0, 0), (0, 50, width, height))
         abc.draw(screen)
         abc.update(screen)
         pygame.display.flip()
+        clock.tick(FPS)
     pygame.quit()
 
 
