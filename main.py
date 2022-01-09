@@ -19,12 +19,12 @@ class Hotbar_hp:
         hp = round(hp, 2)
         draw = 500 * hp
         if self.flag:
-            pygame.draw.line(screen, (255, 0, 0), *[(10, 30), (draw +10, 30)], 15)
+            pygame.draw.line(screen, (255, 0, 0), *[(10, 30), (draw + 10, 30)], 15)
         else:
             pygame.draw.line(screen, (255, 0, 0), *[((1090 - draw), 30), (1090, 30)], 15)
 
     def hp_red(self, hp):
-        self.hp -= hp
+        self.hp = hp
 
 
 b = Hotbar_hp(300, True)
@@ -33,14 +33,13 @@ c = Hotbar_hp(300, False)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pers, *group):
-        super().__init__(group)
+        super().__init__(*group)
         self.image = pygame.image.load('data/mario.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
 
         self.pers = pers  # 'argo''peop''priz''diav'
         self.rect.x, self.rect.y = 110, 525
-        # скорость передвижения 10 px
         self.hp = 300
         self.max_hp = 300
         if self.pers == 'priz':
@@ -69,7 +68,10 @@ class Player(pygame.sprite.Sprite):
         self.hp -= hp
 
     def attack(self):
-        pass
+        h = d.get_cords()
+        udar = self.rect.x + 100
+        if udar - 75 < h[0] < udar + 50:
+            d.hp_red(20)
 
     def jump_act(self):
         print('activate jump')
@@ -78,7 +80,11 @@ class Player(pygame.sprite.Sprite):
             self.jump = -1 * (self.update_jump) - 130
             self.jump1 = True
 
+    def get_cords(self):
+        return self.rect.x, self.rect.y
+
     def update(self, *args):
+        b.hp_red(self.hp)
         if self.jump1:
             if self.jump < 130 - 1:
                 self.jump += self.update_jump
@@ -96,7 +102,37 @@ class Player(pygame.sprite.Sprite):
             self.cords(1, 0)
 
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = pygame.image.load('data/luiji.png')
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = 900, 525
+        self.hp = 300
+        self.max_hp = 300
+        self.update_jump = 1
+        self.jump1 = False
+        self.jump = False
+        self.left = False
+        self.right = False
+
+    def hp_red(self, hp):
+        self.hp -= hp
+
+    def update(self, *args):
+        c.hp_red(self.hp)
+
+    def cords(self, x, y):
+        self.rect.x += x
+        self.rect.y += y
+
+    def get_cords(self):
+        return self.rect.x, self.rect.y
+
+
 a = Player('priz', abc)
+d = Enemy(abc)
 
 
 def main():
@@ -113,7 +149,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     a.jump_act()
-                    c.hp_red(10)
+                    a.hp_red(10)
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     pass
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -122,7 +158,7 @@ def main():
                     a.right_act()
                 if event.key == pygame.K_z:
                     # атака
-                    pass
+                    a.attack()
                 if event.key == pygame.K_x:
                     # Супер атака(способности)
                     pass
