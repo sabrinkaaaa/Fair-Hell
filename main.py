@@ -37,6 +37,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('data/mario.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
+        self.attack2 = False
+        self.attack1 = 0
 
         self.pers = pers  # 'argo''peop''priz''diav'
         self.rect.x, self.rect.y = 110, 525
@@ -72,21 +74,46 @@ class Player(pygame.sprite.Sprite):
         udar = self.rect.x + 100
         if udar - 75 < h[0] < udar + 50:
             d.hp_red(20)
+            self.attack2 = True
+            self.dis()
+
+    def attack_act(self):
+        self.attack2 = True
 
     def jump_act(self):
         print('activate jump')
         if not self.jump1:
-            self.update_jump = 1
+            self.update_jump = 5
             self.jump = -1 * (self.update_jump) - 130
             self.jump1 = True
 
     def get_cords(self):
         return self.rect.x, self.rect.y
 
+    def dis(self):
+        if self.attack2:
+            a = self.get_cords()
+            self.image = pygame.image.load('data/mario_attack.jpg')
+            self.image = pygame.transform.scale(self.image, (100, 100))
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = a[0], a[1]
+        else:
+            a = self.get_cords()
+            self.image = pygame.image.load('data/mario.png')
+            self.image = pygame.transform.scale(self.image, (100, 100))
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = a[0], a[1]
+
     def update(self, *args):
+        if self.attack1 == FPS:
+            self.attack2 = False
+            self.attack1 = 0
+            self.dis()
+        else:
+            self.attack1 += 1
         b.hp_red(self.hp)
         if self.jump1:
-            if self.jump < 130 - 1:
+            if self.jump < 130 - self.update_jump:
                 self.jump += self.update_jump
                 if self.jump < 0:
                     self.cords(0, -1 * (self.update_jump))
