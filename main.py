@@ -180,6 +180,7 @@ def main():
     cloud_2 = Cloud_2(pygame.sprite.Group())
     cloud_1 = Cloud(pygame.sprite.Group())
     pygame.init()
+
     global running
     global f
 
@@ -226,9 +227,9 @@ def main():
         all_sprites_menu.draw(screen)
         all_sprites_menu.update()
         # screen.blit(text, place)
-        #pygame.draw.rect(screen, (255, 255, 255, 127), (375, 450, 350, 200), 0)
-        #pygame.draw.rect(screen, (0, 0, 255), (375, 250, 350, 200))
-        #pygame.draw.rect(screen, (255, 0, 0), (375, 50, 350, 200))
+        # pygame.draw.rect(screen, (255, 255, 255, 127), (375, 450, 350, 200), 0)
+        # pygame.draw.rect(screen, (0, 0, 255), (375, 250, 350, 200))
+        # pygame.draw.rect(screen, (255, 0, 0), (375, 50, 350, 200))
 
         """for i in pygame.event.get():
             if i.type == pygame.QUIT:
@@ -243,8 +244,9 @@ def main():
                 elif 375 < event.pos[0] < 725 and 250 < event.pos[1] < 450:
                     running = False
                 elif 375 < event.pos[0] < 725 and 50 < event.pos[1] < 250:
+                    flag = 1
+                    save_file()
                     running = False
-
 
             """if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -269,16 +271,23 @@ def main():
         pygame.time.delay(30)
     print("hhhhhhhhh")
     f += 1
+    oblako = 0
     running = True
     while running:
         # ЗДЕСЬ ПОЯВЛЯЛИСЬ ВСЕ ОБЪЕКТЫ
         screen.blit(bg_surf, bg_rect)
 
-        all_sprites_cloud.update()
-        all_sprites_cloud.draw(screen)
+        if oblako < 70:
+            for i in range(70):
+                screen.blit(bg_surf, bg_rect)
 
-        cloud_2.new_update()
-        cloud_1.new_update()
+                all_sprites_cloud.update()
+                all_sprites_cloud.draw(screen)
+
+                cloud_2.new_update()
+                cloud_1.new_update()
+                pygame.display.update()
+                oblako += 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
