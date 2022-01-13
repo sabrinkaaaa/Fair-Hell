@@ -67,7 +67,6 @@ class New_game(pygame.sprite.Sprite):
                 self.rect.collidepoint(args[0].pos):
             self.rect.center = (550, 550)
 
-
     def new_update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
                 self.rect.collidepoint(args[0].pos):
@@ -170,7 +169,7 @@ class Cloud_2(pygame.sprite.Sprite):
 
     def new_update(self):
         self.rect = self.rect.move(random.randrange(50) - 1,
-                                    random.randrange(50) - 1)
+                                   random.randrange(50) - 1)
         pygame.display.update()
 
 
@@ -240,7 +239,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 375 < event.pos[0] < 725 and 450 < event.pos[1] < 650:
                     ex.update(event)
-                #print("Сука, у  меня эта хуита пол ёбаного дня не работала")
+                # print("Сука, у  меня эта хуита пол ёбаного дня не работала")
                 elif 375 < event.pos[0] < 725 and 250 < event.pos[1] < 450:
                     running = False
                 elif 375 < event.pos[0] < 725 and 50 < event.pos[1] < 250:
@@ -295,7 +294,6 @@ def main():
         pygame.display.update()
 
         pygame.time.delay(30)
-
 
     pygame.quit()
 
