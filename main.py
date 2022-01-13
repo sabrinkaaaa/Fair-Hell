@@ -7,6 +7,7 @@ import pickle
 width = 1100
 height = 700
 flag = 0
+iconca_agronianin = pygame.sprite.Group()
 all_sprites_cloud = pygame.sprite.Group()
 all_sprites_menu = pygame.sprite.Group()
 running = True
@@ -173,7 +174,29 @@ class Cloud_2(pygame.sprite.Sprite):
         pygame.display.update()
 
 
+class Iconca_agronianin(pygame.sprite.Sprite):
+    image = load_image("iconca-1.png")
+    image = pygame.transform.scale(image, (350, 350))
+
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = Iconca_agronianin.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 550
+        self.rect.y = 550
+        self.speedx = 0
+        self.rect.center = (550, 250)
+
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
+                self.rect.collidepoint(args[0].pos):
+            self.rect = self.rect.move(0, 0)
+
+
 def main():
+    # СОЗДАЁМ СПРАЙТНЫЕ ГРУППЫ И ГРУППЫ СПРАЙТОВ
+    Iconca_agronianin(iconca_agronianin)
+    agronianin = Iconca_agronianin(pygame.sprite.Group())
     ex = Exite(pygame.sprite.Group())
     new_game = New_game(pygame.sprite.Group())
     cloud_2 = Cloud_2(pygame.sprite.Group())
@@ -182,6 +205,7 @@ def main():
 
     global running
     global f
+    global flag
 
     # вставляем фон
     screen = pygame.display.set_mode((width, height))
@@ -235,17 +259,18 @@ def main():
                 sys.exit()"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 375 < event.pos[0] < 725 and 450 < event.pos[1] < 650:
                     ex.update(event)
                 # print("Сука, у  меня эта хуита пол ёбаного дня не работала")
                 elif 375 < event.pos[0] < 725 and 250 < event.pos[1] < 450:
                     running = False
-                elif 375 < event.pos[0] < 725 and 50 < event.pos[1] < 250:
                     flag = 1
                     save_file()
+                elif 375 < event.pos[0] < 725 and 50 < event.pos[1] < 250:
                     running = False
+                    read_file()
 
             """if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -287,14 +312,44 @@ def main():
                 cloud_1.new_update()
                 pygame.display.update()
                 oblako += 1
+            running = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
         pygame.display.update()
 
         pygame.time.delay(30)
+    running = True
+    if flag == 1:
 
+        iconca_agronianin.draw(screen)
+
+        while running:
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    agronianin.update(event)
+                    print("ПЕРС ВЫБРАН")
+                    flag += 0.1
+                    save_file()
+                    running = False
+            pygame.display.update()
+
+    print("hhhhhhh")
+    pygame.display.update()
+
+    running = True
+    while running:
+        screen.blit(bg_surf, bg_rect)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        pygame.time.delay(30)
+        pygame.display.update()
     pygame.quit()
 
 
