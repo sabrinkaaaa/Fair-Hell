@@ -6,6 +6,31 @@ pygame.init()
 abc = pygame.sprite.Group()
 clock = pygame.time.Clock()
 hps = pygame.sprite.Group()
+spos = pygame.sprite.Group()
+
+
+class Croc_spos(pygame.sprite.Sprite):
+    def __init__(self, x, y, storona, *group):
+        super().__init__(*group)
+        self.image = pygame.image.load('data/water1.png')
+        self.image = pygame.transform.scale(self.image, (100, 20))
+        self.rect = self.image.get_rect()
+
+        self.storona = storona
+        self.rect.x = x
+        self.rect.y = y
+        print(345, self.rect.x, self.rect.y)
+
+    def update(self, *args):
+        if self.rect.x > 1200:
+            self.kill()
+        print(321)
+        coords = d.get_cords()
+        if coords[0] + 100 > self.rect.x:
+            pass
+        print(self.rect.x)
+        self.rect.x += 1
+
 
 
 class Hotbar_hp:
@@ -84,7 +109,7 @@ class Player(pygame.sprite.Sprite):
         print('activate jump')
         if not self.jump1:
             self.update_jump = 5
-            self.jump = -1 * (self.update_jump) - 130
+            self.jump = -1 * (self.update_jump) - 300
             self.jump1 = True
 
     def get_cords(self):
@@ -105,15 +130,15 @@ class Player(pygame.sprite.Sprite):
             self.rect.x, self.rect.y = a[0], a[1]
 
     def update(self, *args):
-        if self.attack1 == FPS:
+        if self.attack1 == FPS and self.attack2:
             self.attack2 = False
             self.attack1 = 0
             self.dis()
-        else:
+        elif self.attack2:
             self.attack1 += 1
         b.hp_red(self.hp)
         if self.jump1:
-            if self.jump < 130 - self.update_jump:
+            if self.jump < 300 - self.update_jump:
                 self.jump += self.update_jump
                 if self.jump < 0:
                     self.cords(0, -1 * (self.update_jump))
@@ -127,6 +152,17 @@ class Player(pygame.sprite.Sprite):
             self.cords(-1, 0)
         if self.right and self.rect.x < width - 100:
             self.cords(1, 0)
+
+    def sposop(self):
+        if self.pers == 'argo':
+            print(123)
+            a = self.get_cords()
+            Croc_spos(a[0], a[1], 1, spos)
+
+    def prover(self):
+        h = d.get_cords()
+        udar = self.rect.x + 100
+        print(udar - 75 < h[0] < udar + 50, 2)
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -157,8 +193,25 @@ class Enemy(pygame.sprite.Sprite):
     def get_cords(self):
         return self.rect.x, self.rect.y
 
+    def attack(self):
+        h = a.get_cords()
+        udar = self.rect.x - 100
+        print(udar - 50, udar + 75)
+        if udar - 50 < h[0] < udar + 75:
+            a.hp_red(20)
+            self.attack2 = True
+            # self.dis()
 
-a = Player('priz', abc)
+    def attack_act(self):
+        self.attack2 = True
+
+    def prover(self):
+        h = a.get_cords()
+        udar = self.rect.x - 100
+        print(udar - 50 < h[0] < udar + 75, 1)
+
+
+a = Player('argo', abc)
 d = Enemy(abc)
 
 
@@ -176,7 +229,6 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     a.jump_act()
-                    a.hp_red(10)
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     pass
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -187,10 +239,9 @@ def main():
                     # атака
                     a.attack()
                 if event.key == pygame.K_x:
-                    # Супер атака(способности)
-                    pass
+                    a.sposop()
                 if event.key == pygame.K_c:
-                    # блок(90% урона будет блокировано)
+                    d.attack()
                     pass
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -200,6 +251,8 @@ def main():
         screen.fill((0, 0, 0))
         b.draw(screen)
         c.draw(screen)
+        spos.draw(screen)
+        spos.update(screen)
 
         abc.draw(screen)
         abc.update(screen)
