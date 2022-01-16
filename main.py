@@ -271,6 +271,36 @@ class Monster(pygame.sprite.Sprite):
         self.rect = self.rect.move(15, 0)
 
 
+class Go_forest(pygame.sprite.Sprite):
+    image = load_image("go_forest.png")
+    image = pygame.transform.scale(image, (350, 200))
+
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = Go_forest.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 550
+        self.rect.y = 250
+        self.rect = self.image.get_rect()
+        self.rect.center = (550, 250)
+        self.speedx = 0
+
+
+class Go_city(pygame.sprite.Sprite):
+    image = load_image("go_city.png")
+    image = pygame.transform.scale(image, (350, 200))
+
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = Go_city.image
+        self.rect = self.image.get_rect()
+        self.rect.x = 550
+        self.rect.y = 450
+        self.rect = self.image.get_rect()
+        self.rect.center = (550, 450)
+        self.speedx = 0
+
+
 # АНИМАЦИЮ ЗАМКА В БОЛОТАХ
 growing_castle = [pygame.image.load("bolota0.jpg"), pygame.image.load("bolota1.jpg"), pygame.image.load("bolota2.jpg"),
                   pygame.image.load("bolota3.jpg"), pygame.image.load("bolota4.jpg"), pygame.image.load("bolota5.jpg"),
@@ -291,6 +321,8 @@ def main():
     agronianin_m = pygame.sprite.Group()
     dialog_window = pygame.sprite.Group()
     monster = pygame.sprite.Group()
+    go_forest = pygame.sprite.Group()
+    go_city = pygame.sprite.Group()
 
     pygame.init()
 
@@ -339,6 +371,12 @@ def main():
 
     for _ in range(1):
         Monster(monster)
+
+    for _ in range(1):
+        Go_forest(go_forest)
+
+    for _ in range(1):
+        Go_city(go_city)
 
     while running:
         # ЗДЕСЬ ПОЯВЛЯЛИСЬ ВСЕ ОБЪЕКТЫ
@@ -464,138 +502,197 @@ def main():
             pygame.time.delay(30)
             pygame.display.update()"""
 
-    print("hhhhhhh")
-    pygame.display.update()
+        print("hhhhhhh")
+        pygame.display.update()
 
-    bg_surf = pygame.image.load("bolota13.jpg")
+        bg_surf = pygame.image.load("bolota13.jpg")
 
-    agronianin_m.draw(screen)
-    running = True
-    f = 0
-    while running:
-        screen.blit(bg_surf, bg_rect)
-        if f <= 15:
+        agronianin_m.draw(screen)
+        running = True
+        f = 0
+        while running:
             screen.blit(bg_surf, bg_rect)
-            agronianin_m.update()
-            agronianin_m.draw(screen)
-            pygame.display.update()
-            f += 1
+            if f <= 15:
+                screen.blit(bg_surf, bg_rect)
+                agronianin_m.update()
+                agronianin_m.draw(screen)
+                pygame.display.update()
+                f += 1
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+            elif f == 16:
+                running = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-        elif f == 16:
-            running = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
 
+            pygame.time.delay(30)
+            pygame.display.update()
+        print("sssssss")
+
+        flag_for_arc_sc_1 = 1
+        screen.blit(bg_surf, bg_rect)
+        agronianin_m.draw(screen)
+        pygame.display.update()
         pygame.time.delay(30)
         pygame.display.update()
-    print("sssssss")
 
-    flag_for_arc_sc_1 = 1
-    screen.blit(bg_surf, bg_rect)
-    agronianin_m.draw(screen)
-    pygame.display.update()
-    pygame.time.delay(30)
-    pygame.display.update()
+        running = True
+        f = 0
+        while running:
+            flag_for_arc_sc_1 = 1
 
-    running = True
-    f = 0
-    while running:
-        flag_for_arc_sc_1 = 1
+            while f < 2:
+                for i in range(2):
 
-        while f < 2:
-            for i in range(2):
+                    txt = create_connection_sql(i)
+                    # настройки текста
+                    font = pygame.font.Font(None, 32)
+                    text = font.render(txt, True, (0, 250, 0))
+                    place = text.get_rect(center=(600, 150))
 
-                txt = create_connection_sql(i)
-                # настройки текста
-                font = pygame.font.Font(None, 32)
-                text = font.render(txt, True, (0, 250, 0))
-                place = text.get_rect(center=(600, 150))
+                    screen.blit(bg_surf, bg_rect)
+                    agronianin_m.draw(screen)
+                    dialog_window.draw(screen)
+                    screen.blit(text, place)
+                    print(txt)
 
+                    f += 1
+
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+
+                    pygame.display.update()
+                    pygame.time.delay(1500)
+
+            screen.blit(bg_surf, bg_rect)
+            agronianin_m.draw(screen)
+            dialog_window.draw(screen)
+            screen.blit(text, place)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+
+        running = True
+        f = 0
+
+        while running:
+            screen.blit(bg_surf, bg_rect)
+            if f <= 15:
                 screen.blit(bg_surf, bg_rect)
                 agronianin_m.draw(screen)
-                dialog_window.draw(screen)
-                screen.blit(text, place)
-                print(txt)
-
+                monster.update()
+                monster.draw(screen)
+                pygame.display.update()
+                pygame.time.delay(30)
                 f += 1
-
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
 
-                pygame.display.update()
-                pygame.time.delay(1500)
-
-        screen.blit(bg_surf, bg_rect)
-        agronianin_m.draw(screen)
-        dialog_window.draw(screen)
-        screen.blit(text, place)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif f == 16:
                 running = False
 
-    running = True
-    f = 0
-
-    while running:
-        screen.blit(bg_surf, bg_rect)
-        if f <= 15:
             screen.blit(bg_surf, bg_rect)
             agronianin_m.draw(screen)
-            monster.update()
             monster.draw(screen)
             pygame.display.update()
+
             pygame.time.delay(30)
-            f += 1
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+
+        running = True
+
+        f = 0
+
+        flag_for_mons_sc_1 = 1
+
+        while running:
+
+            txt = create_connection_sql(0)
+            # настройки текста
+            font = pygame.font.Font(None, 32)
+            text = font.render(txt, True, (0, 250, 0))
+            place = text.get_rect(center=(600, 150))
+
+            screen.blit(bg_surf, bg_rect)
+            agronianin_m.draw(screen)
+            monster.draw(screen)
+            dialog_window.draw(screen)
+            screen.blit(text, place)
+
+            pygame.display.update()
+            pygame.time.delay(30)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+
+        # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+        bg_surf = pygame.image.load("app.bmp")
+        running = True
+        f = 0
+
+        while running:
+            screen.blit(bg_surf, bg_rect)
+            go_forest.draw(screen)
+            go_city.draw(screen)
+
+            # pygame.draw.rect(screen, (255, 255, 255, 127), (375, 350, 350, 200), 0)
+            # pygame.draw.rect(screen, (0, 0, 255), (375, 150, 350, 200))
+
+            pygame.display.update()
+            pygame.time.delay(30)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if 375 < event.pos[0] < 725 and 350 < event.pos[1] < 550:
+                        flag += 2
+                        save_file()
+                        running = False
+                    # print("Сука, у  меня эта хуита пол ёбаного дня не работала")
+                    elif 375 < event.pos[0] < 725 and 150 < event.pos[1] < 350:
+                        flag += 1
+                        save_file()
+                        running = False
+        print(flag)
+
+    running = True
+    # выбор город
+    if flag == 2.1:
+        bg_surf = pygame.image.load("end_city.png")
+        while running:
+            screen.blit(bg_surf, bg_rect)
+            pygame.display.update()
+            pygame.time.delay(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-        elif f == 16:
-            running = False
-
-        screen.blit(bg_surf, bg_rect)
-        agronianin_m.draw(screen)
-        monster.draw(screen)
-        pygame.display.update()
-
-        pygame.time.delay(30)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
-    running = True
-
-    f = 0
-
-    flag_for_mons_sc_1 = 1
-
-    while running:
-
-        txt = create_connection_sql(0)
-        # настройки текста
-        font = pygame.font.Font(None, 32)
-        text = font.render(txt, True, (0, 250, 0))
-        place = text.get_rect(center=(600, 150))
-
-        screen.blit(bg_surf, bg_rect)
-        agronianin_m.draw(screen)
-        monster.draw(screen)
-        dialog_window.draw(screen)
-        screen.blit(text, place)
-
-        pygame.display.update()
-        pygame.time.delay(30)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+    # выбор лес
+    if flag == 3.1:
+        bg_surf = pygame.image.load("end_forest.png")
+        while running:
+            screen.blit(bg_surf, bg_rect)
+            pygame.display.update()
+            pygame.time.delay(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
     pygame.quit()
 
