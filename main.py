@@ -7,6 +7,18 @@ abc = pygame.sprite.Group()
 clock = pygame.time.Clock()
 hps = pygame.sprite.Group()
 spos = pygame.sprite.Group()
+class Fone(pygame.sprite.Sprite):
+    def __init__(self, *group):
+        super().__init__(*group)
+        self.image = pygame.image.load('data/fon.jpg')
+        self.image = pygame.transform.scale(self.image, (width, height))
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
+fon = pygame.sprite.Group()
+fon1 = Fone(fon)
+
+
 
 
 class Croc_spos(pygame.sprite.Sprite):
@@ -247,7 +259,7 @@ def main():
                     a.left_act()
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     a.right_act()
-        screen.fill((0, 0, 0))
+        fon.draw(screen)
         b.draw(screen)
         c.draw(screen)
         spos.draw(screen)
