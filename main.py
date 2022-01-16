@@ -571,6 +571,7 @@ def main():
                 pygame.quit()
 
     running = True
+
     f = 0
 
     flag_for_mons_sc_1 = 1
