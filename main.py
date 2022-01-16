@@ -2,13 +2,16 @@ import random
 
 import pygame
 
-FPS = 150
-size = width, height = 1100, 700
-pygame.init()
-abc = pygame.sprite.Group()
-clock = pygame.time.Clock()
-hps = pygame.sprite.Group()
-spos = pygame.sprite.Group()
+
+def proverka():
+    aa = a.hp_return()
+    dd = d.hp_return()
+    if aa < 0:
+        # Игра окончена
+        pass
+    elif dd < 0:
+        # игра выйграна
+        pass
 
 
 class Intelect:
@@ -33,7 +36,7 @@ class Intelect:
                 pass
             self.spis += 1
             self.time_mozg = 0
-            if self.spis == 8:
+            if self.spis == 6:
                 self.spis = 0
                 random.shuffle(self.intelect)
                 print(self.intelect)
@@ -49,14 +52,11 @@ class Fone(pygame.sprite.Sprite):
         self.rect.y = 0
 
 
-fon = pygame.sprite.Group()
-fon1 = Fone(fon)
-
-
 class Croc_spos(pygame.sprite.Sprite):
     def __init__(self, x, y, storona, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/water1.png')
+        self.image = pygame.image.load('data/water1.png').convert_alpha()
+        self.image = pygame.transform.rotate(self.image, 90)
         self.image = pygame.transform.scale(self.image, (100, 20))
         self.rect = self.image.get_rect()
 
@@ -70,7 +70,7 @@ class Croc_spos(pygame.sprite.Sprite):
             self.kill()
         coords = d.get_cords()
         if (coords[0] - 110 < self.rect.x < coords[0] + 50) and \
-                self.rect.y + 1 > coords[1] > self.rect.y - 20:
+                self.rect.y +15 > coords[1] > self.rect.y - 20:
             d.hp_red(20)
             self.kill()
         self.rect.x += 1
@@ -95,10 +95,6 @@ class Hotbar_hp:
         self.hp = hp
 
 
-b = Hotbar_hp(300, True)
-c = Hotbar_hp(300, False)
-
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, pers, *group):
         super().__init__(*group)
@@ -107,7 +103,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.attack2 = False
         self.attack1 = 0
-
+        self.attact3 = False
         self.pers = pers  # 'argo''peop''priz''diav'
         self.rect.x, self.rect.y = 110, 525
         self.hp = 300
@@ -214,7 +210,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load('data/luiji.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 300, 525
+        self.rect.x, self.rect.y = 900, 525
         self.hp = 300
         self.max_hp = 300
         self.update_jump = 1
@@ -229,6 +225,9 @@ class Enemy(pygame.sprite.Sprite):
     def hp_red(self, hp):
         self.hp -= hp
 
+    def hp_return(self):
+        return self.hp
+
     def mozg(self, arrg):
         if arrg == 'atc':
             self.attack()
@@ -242,7 +241,6 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, *args):
         c.hp_red(self.hp)
         mozg.imp()
-        print(self.left, self.right, self.left1, self.right1)
         if self.jump1:
             if self.jump < 300 - self.update_jump:
                 self.jump += self.update_jump
@@ -251,7 +249,6 @@ class Enemy(pygame.sprite.Sprite):
                 else:
                     self.cords(0, self.update_jump)
             else:
-                print(self.rect.y)
                 self.jump = False
                 self.jump1 = False
         if self.left and self.rect.x > 0:
@@ -284,9 +281,8 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         h = a.get_cords()
         udar = self.rect.x - 100
-        print(udar - 50, udar + 75)
         if udar - 50 < h[0] < udar + 75:
-            a.hp_red(20)
+            a.hp_red(50)
             self.attack2 = True
             # self.dis()
 
@@ -301,24 +297,29 @@ class Enemy(pygame.sprite.Sprite):
         if not self.left:
             self.right = True
 
-    def prover(self):
-        h = a.get_cords()
-        udar = self.rect.x - 100
-        print(udar - 50 < h[0] < udar + 75, 1)
 
+FPS = 150
+size = width, height = 1100, 700
+pygame.init()
+abc = pygame.sprite.Group()
+clock = pygame.time.Clock()
+hps = pygame.sprite.Group()
+spos = pygame.sprite.Group()
+
+fon = pygame.sprite.Group()
+fon1 = Fone(fon)
+
+b = Hotbar_hp(300, True)
+c = Hotbar_hp(300, False)
 
 a = Player('argo', abc)
 d = Enemy(abc)
 mozg = Intelect()
 
 
-def main():
-    size = width, height = 1100, 700
+def battle():
     screen = pygame.display.set_mode(size)
     running = True
-    b.draw(screen)
-    c.draw(screen)
-    pygame.display.update()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -338,7 +339,7 @@ def main():
                 if event.key == pygame.K_x:
                     a.sposop()
                 if event.key == pygame.K_c:
-                    d.attack()
+                    # блок
                     pass
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -350,7 +351,6 @@ def main():
         c.draw(screen)
         spos.draw(screen)
         spos.update(screen)
-
         abc.draw(screen)
         abc.update(screen)
         pygame.display.flip()
@@ -359,4 +359,4 @@ def main():
     pygame.quit()
 
 
-main()
+battle()
