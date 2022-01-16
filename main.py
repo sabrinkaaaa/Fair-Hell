@@ -19,16 +19,15 @@ class Croc_spos(pygame.sprite.Sprite):
         self.storona = storona
         self.rect.x = x
         self.rect.y = y
-        print(345, self.rect.x, self.rect.y)
 
     def update(self, *args):
+
         if self.rect.x > 1200:
             self.kill()
-        print(321)
         coords = d.get_cords()
-        if coords[0] + 100 > self.rect.x:
-            pass
-        print(self.rect.x)
+        if (coords[0]-110 < self.rect.x < coords[0]+50) and self.rect.y+1 > coords[1] > self.rect.y -20:
+            d.hp_red(20)
+            self.kill()
         self.rect.x += 1
 
 
