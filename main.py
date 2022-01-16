@@ -572,6 +572,7 @@ def main():
 
     running = True
     f = 0
+
     flag_for_mons_sc_1 = 1
 
     while running:
