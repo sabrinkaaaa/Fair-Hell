@@ -161,12 +161,14 @@ class Player(pygame.sprite.Sprite):
             self.hp -= hp
 
     def attack(self):
-        h = d.get_cords()
-        udar = self.rect.x + 100
-        if udar - 75 < h[0] < udar + 50:
-            d.hp_red(20)
-            self.attack2 = True
-            self.dis()
+        if not self.attack2:
+            h = d.get_cords()
+            udar = self.rect.x + 100
+            if udar - 75 < h[0] < udar + 50:
+                d.hp_red(20)
+                self.attack2 = True
+                self.attact3 += 1
+                self.dis()
 
     def hp_norm(self):
         self.hp = self.max_hp
@@ -226,10 +228,13 @@ class Player(pygame.sprite.Sprite):
             self.cords(1, 0)
 
     def sposop(self):
-        if self.pers == 'argo':
-            print(123)
-            a = self.get_cords()
-            Croc_spos(a[0], a[1], 1, spos)
+
+        if self.attact3 >= 3:
+            self.attact3 = 0
+            if self.pers == 'argo':
+                print(123)
+                a = self.get_cords()
+                Croc_spos(a[0], a[1], 1, spos)
 
     def prover(self):
         h = d.get_cords()
@@ -244,6 +249,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 900, 525
+        self.attack3 = 0
         self.hp = 300
         self.max_hp = 300
         self.update_jump = 1
@@ -326,8 +332,13 @@ class Enemy(pygame.sprite.Sprite):
         h = a.get_cords()
         udar = self.rect.x - 100
         if udar - 50 < h[0] < udar + 75:
-            a.hp_red(5000)
+            if self.attack3 == 3:
+                a.hp_red(150)
+                self.attack3 = 0
+            a.hp_red(50)
             self.attack2 = True
+            self.attack3 += 1
+
             # self.dis()
 
     def attack_act(self):
@@ -419,13 +430,11 @@ def battle():
         mozg.imp()
         clock.tick(FPS)
         pygame.display.flip()
-        print(a.hp_def, d.hp_def, prov)
         if prov == 1 or prov == 2:
             stop += 1
         if prov == 1:
             stop1 = False
         if stop == 400 and prov == 2:
-            print(1234)
             reolad()
             stop = 0
 
