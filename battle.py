@@ -65,7 +65,7 @@ class Intelect:
 class Fone(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/fon.jpg')
+        self.image = pygame.image.load('data/bolota13.jpg')
         self.image = pygame.transform.scale(self.image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -120,7 +120,7 @@ class Hotbar_hp:
 class Player(pygame.sprite.Sprite):
     def __init__(self, pers, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/mario.png')
+        self.image = pygame.image.load('data/argonianin.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
         self.attack2 = False
@@ -192,13 +192,13 @@ class Player(pygame.sprite.Sprite):
     def dis(self):
         if self.attack2:
             a = self.get_cords()
-            self.image = pygame.image.load('data/mario_attack.jpg')
+            self.image = pygame.image.load('data/argonianin_attak.png')
             self.image = pygame.transform.scale(self.image, (100, 100))
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = a[0], a[1]
         else:
             a = self.get_cords()
-            self.image = pygame.image.load('data/mario.png')
+            self.image = pygame.image.load('data/argonianin.png')
             self.image = pygame.transform.scale(self.image, (100, 100))
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = a[0], a[1]
@@ -245,7 +245,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/luiji.png')
+        self.image = pygame.image.load('data/monstr_battle.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 900, 525

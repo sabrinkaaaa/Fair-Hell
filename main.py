@@ -4,6 +4,7 @@ import sys
 import random
 import pickle
 import sqlite3
+from battle import *
 
 width = 1100
 height = 700
@@ -638,8 +639,18 @@ def main():
                     pygame.quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     running = False
+                    battle()
 
         # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+        screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Изображение")
+
+        bg_surf = pygame.image.load("you_win.jpg")
+        for i in range(2):
+            screen.blit(bg_surf, bg_rect)
+            pygame.display.update()
+            pygame.time.delay(900)
 
         bg_surf = pygame.image.load("app.bmp")
         running = True
