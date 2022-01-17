@@ -2,16 +2,36 @@ import random
 
 import pygame
 
+Game = 0
 
-def proverka():
+
+def reolad():
+    a.hp_norm()
+    d.hp_norm()
+    a.rt()
+    d.rt()
+    a.reload()
+    d.reload()
+
+
+def proverka(screen):
     aa = a.hp_return()
     dd = d.hp_return()
-    if aa < 0:
-        # Игра окончена
-        pass
-    elif dd < 0:
-        # игра выйграна
-        pass
+    if aa <= 0 and not dd <= 0:
+        font = pygame.font.Font(None, 72)
+        text = font.render("You Lose!!!", True, (0, 100, 0))
+        place = text.get_rect(center=(200, 150))
+        screen.blit(text, (550, 350))
+        Game = 1
+        return 2
+    elif dd <= 0 and not aa <= 0:
+        font = pygame.font.Font(None, 72)
+        text1 = font.render("You win!!!", True, (0, 100, 0))
+        place = text1.get_rect(center=(200, 150))
+        screen.blit(text1, (550, 350))
+        Game = 2
+        return 1
+    return 0
 
 
 class Intelect:
@@ -70,10 +90,12 @@ class Croc_spos(pygame.sprite.Sprite):
             self.kill()
         coords = d.get_cords()
         if (coords[0] - 110 < self.rect.x < coords[0] + 50) and \
-                self.rect.y +15 > coords[1] > self.rect.y - 20:
+                self.rect.y + 15 > coords[1] > self.rect.y - 20:
             d.hp_red(20)
             self.kill()
         self.rect.x += 1
+        if d.hp_return() <= 0:
+            self.kill()
 
 
 class Hotbar_hp:
@@ -103,7 +125,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.attack2 = False
         self.attack1 = 0
-        self.attact3 = False
+        self.attact3 = 0
         self.pers = pers  # 'argo''peop''priz''diav'
         self.rect.x, self.rect.y = 110, 525
         self.hp = 300
@@ -116,6 +138,10 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.left = False
         self.right = False
+        self.hp_def = True
+
+    def rt(self):
+        self.hp_def = True
 
     def left_act(self):
         self.left = not self.left
@@ -131,7 +157,8 @@ class Player(pygame.sprite.Sprite):
         return self.hp
 
     def hp_red(self, hp):
-        self.hp -= hp
+        if self.hp_def:
+            self.hp -= hp
 
     def attack(self):
         h = d.get_cords()
@@ -140,6 +167,9 @@ class Player(pygame.sprite.Sprite):
             d.hp_red(20)
             self.attack2 = True
             self.dis()
+
+    def hp_norm(self):
+        self.hp = self.max_hp
 
     def attack_act(self):
         self.attack2 = True
@@ -153,6 +183,9 @@ class Player(pygame.sprite.Sprite):
 
     def get_cords(self):
         return self.rect.x, self.rect.y
+
+    def reload(self):
+        self.rect.x = 110
 
     def dis(self):
         if self.attack2:
@@ -221,9 +254,11 @@ class Enemy(pygame.sprite.Sprite):
         self.left1 = 50
         self.right1 = 50
         self.hod = False
+        self.hp_def = True
 
     def hp_red(self, hp):
-        self.hp -= hp
+        if self.hp_def:
+            self.hp -= hp
 
     def hp_return(self):
         return self.hp
@@ -271,6 +306,15 @@ class Enemy(pygame.sprite.Sprite):
     def get_cords(self):
         return self.rect.x, self.rect.y
 
+    def hp_norm(self):
+        self.hp = self.max_hp
+
+    def rt(self):
+        self.hp_def = True
+
+    def reload(self):
+        self.rect.x = 900
+
     def jump_act(self):
         print('activate jump1')
         if not self.jump1:
@@ -282,7 +326,7 @@ class Enemy(pygame.sprite.Sprite):
         h = a.get_cords()
         udar = self.rect.x - 100
         if udar - 50 < h[0] < udar + 75:
-            a.hp_red(50)
+            a.hp_red(5000)
             self.attack2 = True
             # self.dis()
 
@@ -318,12 +362,24 @@ mozg = Intelect()
 
 
 def battle():
+    stop = 0
+    stop1 = True
     screen = pygame.display.set_mode(size)
     running = True
+    prov = proverka(screen)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if stop == 400 and prov == 2:
+                prov = 0
+                reolad()
+                print(1234)
+                stop = 0
+            if stop == 400 or not stop1:
+                running = False
+                prov = 0
+                stop = 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     a.jump_act()
@@ -346,17 +402,32 @@ def battle():
                     a.left_act()
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     a.right_act()
+        if prov != 0:
+            a.hp_def = False
+            d.hp_def = False
+        else:
+            a.rt()
+            d.rt()
         fon.draw(screen)
+        prov = proverka(screen)
         b.draw(screen)
         c.draw(screen)
         spos.draw(screen)
-        spos.update(screen)
         abc.draw(screen)
+        spos.update(screen)
         abc.update(screen)
-        pygame.display.flip()
-        clock.tick(FPS)
         mozg.imp()
+        clock.tick(FPS)
+        pygame.display.flip()
+        print(a.hp_def, d.hp_def, prov)
+        if prov == 1 or prov == 2:
+            stop += 1
+        if prov == 1:
+            stop1 = False
+        if stop == 400 and prov == 2:
+            print(1234)
+            reolad()
+            stop = 0
+
+        pygame.display.flip()
     pygame.quit()
-
-
-battle()
