@@ -59,13 +59,11 @@ class Intelect:
             if self.spis == 6:
                 self.spis = 0
                 random.shuffle(self.intelect)
-                print(self.intelect)
-
 
 class Fone(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/fon.jpg')
+        self.image = pygame.image.load('data/bolota13.jpg')
         self.image = pygame.transform.scale(self.image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -78,6 +76,7 @@ class Croc_spos(pygame.sprite.Sprite):
         self.image = pygame.image.load('data/water1.png').convert_alpha()
         self.image = pygame.transform.rotate(self.image, 90)
         self.image = pygame.transform.scale(self.image, (100, 20))
+        self.gravity = 0
         self.rect = self.image.get_rect()
 
         self.storona = storona
@@ -85,7 +84,7 @@ class Croc_spos(pygame.sprite.Sprite):
         self.rect.y = y
 
     def update(self, *args):
-
+        self.gravity += 1
         if self.rect.x > 1200:
             self.kill()
         coords = d.get_cords()
@@ -94,6 +93,9 @@ class Croc_spos(pygame.sprite.Sprite):
             d.hp_red(20)
             self.kill()
         self.rect.x += 1
+        if self.gravity == 8:
+            self.gravity = 0
+            self.rect.y += 1
         if d.hp_return() <= 0:
             self.kill()
 
@@ -120,14 +122,14 @@ class Hotbar_hp:
 class Player(pygame.sprite.Sprite):
     def __init__(self, pers, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/mario.png')
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.image.load('data/argonianin.png')
+        self.image = pygame.transform.scale(self.image, (150, 250))
         self.rect = self.image.get_rect()
         self.attack2 = False
         self.attack1 = 0
         self.attact3 = 0
         self.pers = pers  # 'argo''peop''priz''diav'
-        self.rect.x, self.rect.y = 110, 525
+        self.rect.x, self.rect.y = 110, 375
         self.hp = 300
         self.max_hp = 300
         if self.pers == 'priz':
@@ -164,7 +166,7 @@ class Player(pygame.sprite.Sprite):
         if not self.attack2:
             h = d.get_cords()
             udar = self.rect.x + 100
-            if udar - 75 < h[0] < udar + 50:
+            if udar - 175 < h[0] < udar + 100:
                 d.hp_red(20)
                 self.attack2 = True
                 self.attact3 += 1
@@ -192,14 +194,14 @@ class Player(pygame.sprite.Sprite):
     def dis(self):
         if self.attack2:
             a = self.get_cords()
-            self.image = pygame.image.load('data/mario_attack.jpg')
-            self.image = pygame.transform.scale(self.image, (100, 100))
+            self.image = pygame.image.load('data/argonianin_attak.png')
+            self.image = pygame.transform.scale(self.image, (150, 250))
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = a[0], a[1]
         else:
             a = self.get_cords()
-            self.image = pygame.image.load('data/mario.png')
-            self.image = pygame.transform.scale(self.image, (100, 100))
+            self.image = pygame.image.load('data/argonianin.png')
+            self.image = pygame.transform.scale(self.image, (150, 250))
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = a[0], a[1]
 
@@ -224,7 +226,7 @@ class Player(pygame.sprite.Sprite):
                 self.jump1 = False
         if self.left and self.rect.x > 0:
             self.cords(-1, 0)
-        if self.right and self.rect.x < width - 100:
+        if self.right and self.rect.x < width - 150:
             self.cords(1, 0)
 
     def sposop(self):
@@ -245,10 +247,10 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/luiji.png')
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.image.load('data/monstr_battle.png')
+        self.image = pygame.transform.scale(self.image, (300, 220))
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 900, 525
+        self.rect.x, self.rect.y = 700, 405
         self.attack3 = 0
         self.hp = 300
         self.max_hp = 300
@@ -298,7 +300,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.left1 = 50
             self.cords(-1, 0)
             self.left1 -= 1
-        if self.right and self.rect.x < width - 100:
+        if self.right and self.rect.x < width - 300:
             if self.right1 == 0:
                 self.right = False
                 self.right1 = 50
@@ -331,7 +333,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         h = a.get_cords()
         udar = self.rect.x - 100
-        if udar - 50 < h[0] < udar + 75:
+        if udar - 100 < h[0] < udar + 175:
             if self.attack3 == 3:
                 a.hp_red(150)
                 self.attack3 = 0
@@ -440,3 +442,6 @@ def battle():
 
         pygame.display.flip()
     pygame.quit()
+
+
+battle()
