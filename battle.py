@@ -441,7 +441,7 @@ def battle():
             stop = 0
 
         pygame.display.flip()
-    pygame.quit()
+    #pygame.quit()
 
 
-battle()
+
