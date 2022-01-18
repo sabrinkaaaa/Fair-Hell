@@ -65,7 +65,7 @@ class Intelect:
 class Fone(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
-        self.image = pygame.image.load('data/fon.jpg')
+        self.image = pygame.image.load('data/bolota13.jpg')
         self.image = pygame.transform.scale(self.image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -319,7 +319,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hp_def = True
 
     def reload(self):
-        self.rect.x = 900
+        self.rect.x = 700
 
     def jump_act(self):
         print('activate jump1')
