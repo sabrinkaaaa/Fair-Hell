@@ -60,6 +60,7 @@ class Intelect:
                 self.spis = 0
                 random.shuffle(self.intelect)
 
+
 class Fone(pygame.sprite.Sprite):
     def __init__(self, *group):
         super().__init__(*group)
@@ -166,7 +167,7 @@ class Player(pygame.sprite.Sprite):
         if not self.attack2:
             h = d.get_cords()
             udar = self.rect.x + 100
-            if udar - 175 < h[0] < udar + 100:
+            if udar - 175 < h[0] < udar + 500:
                 d.hp_red(20)
                 self.attack2 = True
                 self.attact3 += 1
@@ -383,7 +384,7 @@ def battle():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
             if stop == 400 and prov == 2:
                 prov = 0
                 reolad()

@@ -643,8 +643,8 @@ def main():
 
         # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-        # screen = pygame.display.set_mode((width, height))
-        # pygame.display.set_caption("Изображение")
+        screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Изображение")
 
         bg_surf = pygame.image.load("you_win.jpg")
         for i in range(2):
